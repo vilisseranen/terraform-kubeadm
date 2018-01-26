@@ -71,3 +71,25 @@ locals {
 output "management_ip" {
   value = "${format("ssh %s@%s -p 2200 -i id_rsa", var.username, cloudca_public_ip.master_ip.ip_address)}"
 }
+
+resource "cloudca_public_ip" "vault_ip" {
+  environment_id = "${cloudca_environment.kubernetes.id}"
+  vpc_id         = "${cloudca_vpc.kubernetes.id}"
+}
+
+resource "cloudca_load_balancer_rule" "vault_lbr" {
+  environment_id = "${cloudca_environment.kubernetes.id}"
+
+  name="vault_lb"
+  network_id  = "${cloudca_network.worker.id}"
+  public_ip_id="${cloudca_public_ip.vault_ip.id}"
+  protocol="tcp"
+  algorithm = "source"
+  public_port = 8200
+  private_port = 31397
+  instance_ids = ["${cloudca_instance.worker_nodes.*.id}"]
+}
+
+output "vault_ip" {
+  value = "vault status -address=http://${cloudca_public_ip.vault_ip.ip_address}:8200"
+}
