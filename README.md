@@ -11,15 +11,15 @@ https://kubernetes.io/docs/setup/independent/create-cluster-kubeadm/
 ## How to use
 
 - Generate ssh keys, with `ssh-keygen -t rsa -b 4096 -N "" -f ./id_rsa` for example
-- Create a file terraform.tfvars containing at least the following variables:
+- Create a file terraform.tfvars containing the following variables:
   - `api_key`: your cloud.ca API key
   - `organization_code`: name used to connect to cloud.ca - \<organization_code>.cloud.ca
-  - `service_code`: `compute-qc` or `compute-on`
-  - `zone_id`: `QC-1` or `QC-2` when using `compute-qc`, `ON-1` when using `compute-on`
   - `admin`: a list of users in your organization who will have the `Environment Admin` role
   - `read_only`: a list of users in your organization who wil have the `Read Only` role
-  - `prefix`: a prefix for all resources created
-  - `username`: the username you will use to connect to the machines
+  - `service_code`: `compute-qc` or `compute-on` (default: `compute-qc`)
+  - `zone_id`: `QC-1` or `QC-2` when using `compute-qc`, `ON-1` when using `compute-on` (default: `QC-2`)
+  - `prefix`: a prefix for all resources created (default: `k8s`)
+  - `username`: the username you will use to connect to the machines (default: `kubernetes`)
 - Initialize Terraform using `terraform init`
 
 ## Use Kubernetes

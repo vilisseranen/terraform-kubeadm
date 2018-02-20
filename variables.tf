@@ -1,6 +1,8 @@
 variable "api_key" {}
 
-variable "service_code" {}
+variable "service_code" {
+  default = "compute-qc"
+}
 
 variable "organization_code" {}
 
@@ -12,11 +14,17 @@ variable "read_only" {
   type = "list"
 }
 
-variable "zone_id" {}
+variable "zone_id" {
+  default = "QC-2"
+}
 
-variable "prefix" {}
+variable "prefix" {
+  default = "k8s"
+}
 
-variable "username" {}
+variable "username" {
+  default = "kubernetes"
+}
 
 variable "worker_count" {
   default = 3
@@ -56,11 +64,22 @@ variable "worker_disk" {
 
 # Configuration for the Vault deployment
 variable "deploy_vault" {
-  default = false
+  default = "false"
 }
 
-variable "os_username" {}
-variable "os_project" {}
-variable "os_password" {}
-variable "os_auth_url" {}
-variable "container" {}
+variable "os_username" {
+  default = "<replace with object store username>"
+}
+variable "os_project" {
+  default = "<replace with project UUID>"
+}
+variable "os_password" {
+  default = "<replace with object store password>"
+}
+variable "os_auth_url" {
+  default = "https://auth.cloud.ca/v2.0"
+}
+variable "container" {
+  default = "vault"
+}
+  
