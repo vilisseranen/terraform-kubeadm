@@ -102,7 +102,7 @@ resource "cloudca_port_forwarding_rule" "management_worker_ssh" {
     connection {
       type        = "ssh"
       user        = "${var.username}"
-      private_key = "${file("./id_rsa")}"
+      private_key = "${tls_private_key.ssh_key.private_key_pem}"
       host        = "${cloudca_public_ip.workers_ip.ip_address}"
       port        = "${2210 + count.index + 1}"
     }

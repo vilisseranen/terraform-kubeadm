@@ -35,7 +35,7 @@ variable "template_name" {
 }
 
 variable "default_offering" {
-  default = "Custom specs on VDI-per-LUN"
+  default = "Standard"
 }
 
 variable "master_ram" {
@@ -70,16 +70,19 @@ variable "deploy_vault" {
 variable "os_username" {
   default = "<replace with object store username>"
 }
+
 variable "os_project" {
   default = "<replace with project UUID>"
 }
+
 variable "os_password" {
   default = "<replace with object store password>"
 }
+
 variable "os_auth_url" {
   default = "https://auth.cloud.ca/v2.0"
 }
+
 variable "container" {
   default = "vault"
 }
-  

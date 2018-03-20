@@ -29,11 +29,21 @@ resource "cloudca_public_ip" "workers_ip" {
   vpc_id         = "${cloudca_vpc.kubernetes.id}"
 }
 
+resource "tls_private_key" "ssh_key" {
+  algorithm = "RSA"
+  rsa_bits  = "4096"
+}
+
+resource "local_file" "ssh_key" {
+  content  = "${tls_private_key.ssh_key.private_key_pem}"
+  filename = "./id_rsa"
+}
+
 data "template_file" "cloudinit" {
   template = "${file("templates/cloudinit.tpl")}"
 
   vars {
-    public_key = "${replace(file("./id_rsa.pub"), "\n", "")}"
+    public_key = "${tls_private_key.ssh_key.public_key_openssh}"
     username   = "${var.username}"
   }
 }

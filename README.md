@@ -10,7 +10,6 @@ https://kubernetes.io/docs/setup/independent/create-cluster-kubeadm/
 
 ## How to use
 
-- Generate ssh keys, with `ssh-keygen -t rsa -b 4096 -N "" -f ./id_rsa` for example
 - Create a file terraform.tfvars containing the following variables:
   - `api_key`: your cloud.ca API key
   - `organization_code`: name used to connect to cloud.ca - \<organization_code>.cloud.ca

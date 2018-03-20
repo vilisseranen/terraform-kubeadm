@@ -5,7 +5,7 @@ export PYTHONIOENCODING=utf8
 # Variables to upload join script to swift
 # Init the master
 echo "Init the master"
-kubeadm init --pod-network-cidr=192.168.0.0/16 --token ${token} >> /home/${username}/kubeadm_init.log
+kubeadm init --apiserver-cert-extra-sans ${public_ip} --token ${token} >> /home/${username}/kubeadm_init.log
 
 # Config kubectl
 echo "Copy config"
@@ -19,7 +19,10 @@ sleep 60
 kubever=$(kubectl version | base64 | tr -d '\n')
 kubectl --kubeconfig=/etc/kubernetes/admin.conf apply -f "https://cloud.weave.works/k8s/net?k8s-version=$kubever"
 
-# Create the deployment
+# Deploy a Dashboard
+kubectl --kubeconfig=/etc/kubernetes/admin.conf create -f https://raw.githubusercontent.com/kubernetes/dashboard/master/src/deploy/recommended/kubernetes-dashboard.yaml
+
+# Create the Vault deployment
 if ${deploy_vault}
 then
   kubectl --kubeconfig=/etc/kubernetes/admin.conf create -f /home/${username}/manifests/vault.yaml
