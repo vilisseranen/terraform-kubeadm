@@ -44,6 +44,7 @@ If you want to create the Vault deployment, you will need to:
   - `os_auth_url`: Object Storage `Authentication endpoint` in cloud.ca
   - `container`: Container used to store Vault data
   - `deploy_vault`: Set this to true
+
 This will write a `vault.yaml` manifest in the `manifests/` folder, upload it to the
 Kubernetes cluster and start the deployment. You will need to take care of the Vault
 initialization. Note that this manifest will create 3 replicas of a non-HA Vault servers
