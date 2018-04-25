@@ -84,16 +84,6 @@ resource "cloudca_instance" "worker_nodes" {
   count                  = "${var.worker_count}"
   user_data              = "${data.template_file.cloudinit.rendered}"
   depends_on             = ["cloudca_instance.master_node"]
-}
-
-resource "cloudca_port_forwarding_rule" "management_worker_ssh" {
-  environment_id     = "${cloudca_environment.kubernetes.id}"
-  public_ip_id       = "${cloudca_public_ip.workers_ip.id}"
-  public_port_start  = "${2210 + count.index + 1}"
-  private_ip_id      = "${element(cloudca_instance.worker_nodes.*.private_ip_id, count.index)}"
-  private_port_start = 22
-  protocol           = "TCP"
-  count              = "${var.worker_count}"
 
   provisioner "file" {
     content     = "${data.template_file.bootstrap_worker.rendered}"
@@ -101,10 +91,15 @@ resource "cloudca_port_forwarding_rule" "management_worker_ssh" {
 
     connection {
       type        = "ssh"
+      host        = "${self.private_ip}"
       user        = "${var.username}"
       private_key = "${tls_private_key.ssh_key.private_key_pem}"
-      host        = "${cloudca_public_ip.workers_ip.ip_address}"
-      port        = "${2210 + count.index + 1}"
+      port        = 22
+
+      bastion_host        = "${cloudca_public_ip.bastion.ip_address}"
+      bastion_user        = "${var.username}"
+      bastion_private_key = "${tls_private_key.ssh_key.private_key_pem}"
+      bastion_port        = 22
     }
   }
 }

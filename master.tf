@@ -127,7 +127,7 @@ data "template_file" "bootstrap_master" {
   template = "${file("templates/bootstrap_master.sh.tpl")}"
 
   vars {
-    public_ip    = "${cloudca_public_ip.master_ip.ip_address}"
+    cert_ip      = "${cloudca_instance.master_node.private_ip}"
     username     = "${var.username}"
     token        = "${local.token}"
     deploy_vault = "${var.deploy_vault ? "true" : "false"}"
@@ -146,31 +146,7 @@ resource "cloudca_instance" "master_node" {
   user_data              = "${data.template_file.cloudinit.rendered}"
 }
 
-resource "cloudca_port_forwarding_rule" "management_master_api" {
-  environment_id     = "${cloudca_environment.kubernetes.id}"
-  public_ip_id       = "${cloudca_public_ip.master_ip.id}"
-  public_port_start  = "6443"
-  private_ip_id      = "${cloudca_instance.master_node.private_ip_id}"
-  private_port_start = "6443"
-  protocol           = "TCP"
-}
-
-resource "cloudca_port_forwarding_rule" "management_master_ssh" {
-  environment_id     = "${cloudca_environment.kubernetes.id}"
-  public_ip_id       = "${cloudca_public_ip.master_ip.id}"
-  public_port_start  = "2200"
-  private_ip_id      = "${cloudca_instance.master_node.private_ip_id}"
-  private_port_start = 22
-  protocol           = "TCP"
-
-  connection {
-    type        = "ssh"
-    user        = "${var.username}"
-    private_key = "${tls_private_key.ssh_key.private_key_pem}"
-    host        = "${cloudca_public_ip.master_ip.ip_address}"
-    port        = 2200
-  }
-
+resource "null_resource" "bootstrap_master" {
   provisioner "file" {
     content     = "${data.template_file.bootstrap_master.rendered}"
     destination = "/home/${var.username}/bootstrap.sh"
@@ -179,5 +155,18 @@ resource "cloudca_port_forwarding_rule" "management_master_ssh" {
   provisioner "file" {
     source      = "manifests"
     destination = "/home/${var.username}/manifests"
+  }
+
+  connection {
+    type        = "ssh"
+    host        = "${cloudca_instance.master_node.private_ip}"
+    user        = "${var.username}"
+    private_key = "${tls_private_key.ssh_key.private_key_pem}"
+    port        = 22
+
+    bastion_host        = "${cloudca_public_ip.bastion.ip_address}"
+    bastion_user        = "${var.username}"
+    bastion_private_key = "${tls_private_key.ssh_key.private_key_pem}"
+    bastion_port        = 22
   }
 }

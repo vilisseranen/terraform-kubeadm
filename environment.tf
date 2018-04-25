@@ -19,31 +19,39 @@ resource "cloudca_vpc" "kubernetes" {
   zone           = "${var.zone_id}"
 }
 
-resource "cloudca_public_ip" "master_ip" {
-  environment_id = "${cloudca_environment.kubernetes.id}"
-  vpc_id         = "${cloudca_vpc.kubernetes.id}"
-}
-
-resource "cloudca_public_ip" "workers_ip" {
-  environment_id = "${cloudca_environment.kubernetes.id}"
-  vpc_id         = "${cloudca_vpc.kubernetes.id}"
-}
-
 resource "tls_private_key" "ssh_key" {
   algorithm = "RSA"
   rsa_bits  = "4096"
 }
 
-resource "local_file" "ssh_key" {
+resource "local_file" "ssh_key_private" {
   content  = "${tls_private_key.ssh_key.private_key_pem}"
   filename = "./id_rsa"
+
+  provisioner "local-exec" {
+    command = "chmod 400 ./id_rsa"
+  }
+}
+
+resource "local_file" "ssh_key_public" {
+  content  = "${tls_private_key.ssh_key.public_key_openssh}"
+  filename = "./id_rsa.pub"
 }
 
 data "template_file" "cloudinit" {
   template = "${file("templates/cloudinit.tpl")}"
 
   vars {
-    public_key = "${tls_private_key.ssh_key.public_key_openssh}"
+    public_key = "${replace(tls_private_key.ssh_key.public_key_openssh, "\n", "")}"
+    username   = "${var.username}"
+  }
+}
+
+data "template_file" "cloudinit_bastion" {
+  template = "${file("templates/cloudinit_bastion.tpl")}"
+
+  vars {
+    public_key = "${replace(tls_private_key.ssh_key.public_key_openssh, "\n", "")}"
     username   = "${var.username}"
   }
 }
@@ -79,5 +87,5 @@ locals {
 }
 
 output "management_ip" {
-  value = "${format("ssh %s@%s -p 2200 -i id_rsa", var.username, cloudca_public_ip.master_ip.ip_address)}"
+  value = "${format("ssh %s@%s -i id_rsa", var.username, cloudca_public_ip.bastion.ip_address)}"
 }

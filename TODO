@@ -1,0 +1,12 @@
+- Terraform
+    - ingress-controller
+    - port forwarding list variable for port to redirect on ingress controller
+    - add if else on bootstrap.tpl for pod networks
+    - change output
+    - Tag the ingress controller
+- Kubernetes
+- Install traefik
+- Let's encrypt for traefik
+- Private registry for app deploy (with content on Swift ?)
+- Multi-cloud ?
+- Prometeus ?

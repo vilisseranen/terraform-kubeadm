@@ -5,7 +5,7 @@ export PYTHONIOENCODING=utf8
 # Variables to upload join script to swift
 # Init the master
 echo "Init the master"
-kubeadm init --apiserver-cert-extra-sans ${public_ip} --token ${token} >> /home/${username}/kubeadm_init.log
+kubeadm init --apiserver-cert-extra-sans ${cert_ip} --token ${token} >> /home/${username}/kubeadm_init.log
 
 # Config kubectl
 echo "Copy config"
