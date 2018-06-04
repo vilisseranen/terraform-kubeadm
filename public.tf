@@ -66,6 +66,19 @@ resource "null_resource" "test_bastion" {
     inline = [ "ls" ]
   }
 
+  provisioner "file" {
+    content      = "${tls_private_key.ssh_key.private_key_pem}"
+    destination = "/home/${var.username}/.ssh/id_rsa"
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+        "mkdir -p /home/${var.username}/.kube",
+        "chmod 400 /home/${var.username}/.ssh/id_rsa",
+        "scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ${cloudca_instance.master_node.private_ip}:/home/${var.username}/.kube/config /home/${var.username}/.kube/config"
+    ]
+  }
+
   connection {
     type        = "ssh"
     host        = "${cloudca_public_ip.bastion.ip_address}"
@@ -73,4 +86,5 @@ resource "null_resource" "test_bastion" {
     private_key = "${tls_private_key.ssh_key.private_key_pem}"
     port        = 22
   }
+
 }
