@@ -24,8 +24,8 @@ https://kubernetes.io/docs/setup/independent/create-cluster-kubeadm/
 
 ## Use Kubernetes
 
-Terraform will output a command to connect to the master node at the end of the run.
-The Kubernetes configuration was copied on the master node to the user's home directory.
+Terraform will output a command to connect to the bastion node at the end of the run.
+The Kubernetes configuration was copied on the bastion node to the user's home directory.
 With this user, you should be able to run `kubectl` commands. For example, at the end of
 the Terraform run, try executing `kubectl get nodes` to see if all workers have joined
 the cluster successfully, and `kubectl get pods --namespace kube-system` to make sure all
