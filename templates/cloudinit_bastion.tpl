@@ -23,4 +23,4 @@ yum_repos:
       gpgkey: https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
 
 runcmd:
-  - yum install -y kubectl
+  - yum install -y kubectl tmux
