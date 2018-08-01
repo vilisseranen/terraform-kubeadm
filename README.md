@@ -8,6 +8,11 @@ This configuration will deploy a Kubernetes cluster with:
 The configuration was built from the instructions found on this page:
 https://kubernetes.io/docs/setup/independent/create-cluster-kubeadm/
 
+## Prerequisite
+
+This configuration requires `terraform-provider-cloudca` installed.
+- Installation instructions are available here: https://github.com/cloud-ca/terraform-provider-cloudca#installation.and
+
 ## How to use
 
 - Create a file terraform.tfvars containing the following variables:
