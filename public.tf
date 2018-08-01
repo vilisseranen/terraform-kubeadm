@@ -74,8 +74,7 @@ resource "null_resource" "test_bastion" {
   provisioner "remote-exec" {
     inline = [
         "mkdir -p /home/${var.username}/.kube",
-        "chmod 400 /home/${var.username}/.ssh/id_rsa",
-        "scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ${cloudca_instance.master_node.private_ip}:/home/${var.username}/.kube/config /home/${var.username}/.kube/config"
+        "chmod 400 /home/${var.username}/.ssh/id_rsa"
     ]
   }
 
