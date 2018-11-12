@@ -4,7 +4,7 @@ resource "cloudca_network" "worker" {
   description      = "Network for the worker nodes"
   vpc_id           = "${cloudca_vpc.kubernetes.id}"
   network_offering = "Load Balanced Tier"
-  network_acl_id   = "${cloudca_network_acl.worker.id}"
+  network_acl   = "${cloudca_network_acl.worker.id}"
 }
 
 resource "cloudca_network_acl" "worker" {

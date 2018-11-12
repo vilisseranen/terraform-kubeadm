@@ -4,7 +4,7 @@ resource "cloudca_network" "master" {
   description      = "Network for the master nodes"
   vpc_id           = "${cloudca_vpc.kubernetes.id}"
   network_offering = "Standard Tier"
-  network_acl_id   = "${cloudca_network_acl.master.id}"
+  network_acl   = "${cloudca_network_acl.master.id}"
 }
 
 resource "cloudca_network_acl" "master" {

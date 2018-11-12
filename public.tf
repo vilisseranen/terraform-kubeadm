@@ -4,7 +4,7 @@ resource "cloudca_network" "public" {
   description      = "Network for the public access"
   vpc_id           = "${cloudca_vpc.kubernetes.id}"
   network_offering = "Standard Tier"
-  network_acl_id   = "${cloudca_network_acl.public.id}"
+  network_acl   = "${cloudca_network_acl.public.id}"
 }
 
 resource "cloudca_network_acl" "public" {
